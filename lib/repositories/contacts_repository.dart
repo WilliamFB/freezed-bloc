@@ -8,7 +8,7 @@ class ContactsRepository {
     final response = await Dio().get(url);
 
     return response.data
-        ?.map<ContactModel>((contact) => ContactModel.fromJson(contact))
+        ?.map<ContactModel>((contact) => ContactModel.fromMap(contact))
         .toList();
   }
 

@@ -1,5 +1,6 @@
 // import 'package:bloc/bloc.dart';
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_studies/repositories/contacts_repository.dart';
@@ -22,7 +23,14 @@ class ContactsListBloc extends Bloc<ContactsListEvent, ContactsListState> {
 
   FutureOr<void> _findAll(
       _ContactsListEventFindAll event, Emitter<ContactsListState> emit) async {
-    final contacts = await _repository.findAll();
-    emit(ContactsListState.data(contacts: contacts));
+    try {
+      emit(ContactsListState.loading());
+      final contacts = await _repository.findAll();
+      await Future.delayed(const Duration(seconds: 2));
+      emit(ContactsListState.data(contacts: contacts));
+    } catch (e, s) {
+      log('Erro ao buscar contatos', error: e, stackTrace: s);
+      emit(ContactsListState.error(error: 'Erro ao buscar contatos'));
+    }
   }
 }
