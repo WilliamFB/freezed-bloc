@@ -1,4 +1,5 @@
 import 'package:bloc_studies/features/contacts/list/contacts_list_page.dart';
+import 'package:bloc_studies/features/contacts/register/bloc/contacts_register_bloc.dart';
 import 'package:bloc_studies/features/contacts/register/contacts_register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +30,11 @@ class MyApp extends StatelessWidget {
           child: const ContactsListPage(),
         ),
         routes: {
-          'contacts/register': (context) => const ContactsRegisterPage(),
+          'contacts/register': (context) => BlocProvider(
+                create: (context) =>
+                    ContactsRegisterBloc(repository: context.read()),
+                child: const ContactsRegisterPage(),
+              ),
           'contacts/update': (context) => const ContactsUpdatePage(),
         },
       ),
