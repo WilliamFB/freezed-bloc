@@ -16,7 +16,7 @@ class ContactsRepository {
       Dio().post(url, data: model.toMap());
 
   Future<void> update(ContactModel model) =>
-      Dio().put('$url/%{model.id}', data: model.toMap());
+      Dio().put('$url/${model.id}', data: model.toMap());
 
   Future<void> delete(ContactModel model) => Dio().delete('$url/%{model.id}');
 }
