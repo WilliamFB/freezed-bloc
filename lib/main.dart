@@ -1,6 +1,9 @@
 import 'package:bloc_studies/features/contacts/list/contacts_list_page.dart';
 import 'package:bloc_studies/features/contacts/register/bloc/contacts_register_bloc.dart';
 import 'package:bloc_studies/features/contacts/register/contacts_register_page.dart';
+import 'package:bloc_studies/features/contacts_cubit/list/contacts_list_cubit_page.dart';
+import 'package:bloc_studies/features/contacts_cubit/list/cubit/contacts_list_cubit_cubit.dart';
+import 'package:bloc_studies/features/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,23 +24,24 @@ class MyApp extends StatelessWidget {
     return RepositoryProvider(
       create: (context) => ContactsRepository(),
       child: MaterialApp(
-        title: 'Bloc & Freezed Demo',
+        title: 'Bloc & Cubit & Freezed',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: BlocProvider(
-          create: (context) => ContactsListBloc(
-            repository: context.read<ContactsRepository>(),
-          )..add(const ContactsListEvent.findAll()),
-          child: const ContactsListPage(),
-        ),
+        home: const HomePage(),
         routes: {
-          'contacts/register': (context) => BlocProvider(
+          'bloc/contacts/list': (context) => BlocProvider(
+                create: (context) => ContactsListBloc(
+                  repository: context.read<ContactsRepository>(),
+                )..add(const ContactsListEvent.findAll()),
+                child: const ContactsListPage(),
+              ),
+          'bloc/contacts/register': (context) => BlocProvider(
                 create: (context) =>
                     ContactsRegisterBloc(repository: context.read()),
                 child: const ContactsRegisterPage(),
               ),
-          'contacts/update': (context) {
+          'bloc/contacts/update': (context) {
             final contact =
                 ModalRoute.of(context)!.settings.arguments as ContactModel;
 
@@ -47,6 +51,12 @@ class MyApp extends StatelessWidget {
               child: ContactsUpdatePage(contact: contact),
             );
           },
+          'cubit/contacts/list': (context) => BlocProvider(
+                create: (context) => ContactsListCubitCubit(
+                  repository: context.read(),
+                )..findAll(),
+                child: const ContactsListCubitPage(),
+              ),
         },
       ),
     );

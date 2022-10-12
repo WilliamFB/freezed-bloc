@@ -14,7 +14,7 @@ class ContactsListPage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await Navigator.pushNamed(context, 'contacts/register');
+          await Navigator.pushNamed(context, 'bloc/contacts/register');
           context
               .read<ContactsListBloc>()
               .add(const ContactsListEvent.findAll());
@@ -104,7 +104,7 @@ class ContactsListPage extends StatelessWidget {
                                     onTap: () async {
                                       await Navigator.pushNamed(
                                         context,
-                                        'contacts/update',
+                                        'bloc/contacts/update',
                                         arguments: contact,
                                       );
                                       context.read<ContactsListBloc>().add(
