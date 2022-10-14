@@ -28,4 +28,10 @@ class ContactsListCubitCubit extends Cubit<ContactsListCubitState> {
           message: 'Erro ao buscar contatos'));
     }
   }
+
+  Future<void> delete(ContactModel model) async {
+    emit(const ContactsListCubitState.loading());
+    await _repository.delete(model);
+    await findAll();
+  }
 }

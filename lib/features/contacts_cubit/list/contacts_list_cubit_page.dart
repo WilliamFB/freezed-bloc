@@ -2,6 +2,7 @@ import 'package:bloc_studies/features/contacts_cubit/list/cubit/contacts_list_cu
 import 'package:bloc_studies/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../models/contact_model.dart';
 
@@ -42,11 +43,39 @@ class ContactsListCubitPage extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: contacts.length,
-                        itemBuilder: (_, index) {
+                        itemBuilder: (context, index) {
                           final contact = contacts[index];
-                          return ListTile(
-                            title: Text(contact.name),
-                            subtitle: Text(contact.email),
+                          return Column(
+                            children: [
+                              Slidable(
+                                endActionPane: ActionPane(
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      flex: 1,
+                                      autoClose: true,
+                                      onPressed: (context) {
+                                        context
+                                            .read<ContactsListCubitCubit>()
+                                            .delete(contact);
+                                      },
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.delete_forever,
+                                      label: 'Delete',
+                                    ),
+                                  ],
+                                ),
+                                child: ListTile(
+                                  title: Text(contact.name),
+                                  subtitle: Text(contact.email),
+                                ),
+                              ),
+                              Container(
+                                height: 1,
+                                color: Colors.grey[300],
+                              ),
+                            ],
                           );
                         },
                       );
