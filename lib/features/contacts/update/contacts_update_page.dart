@@ -1,3 +1,4 @@
+import 'package:bloc_studies/core/ui/scaffold_messenger_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,17 +43,7 @@ class _ContactsUpdatePageState extends State<ContactsUpdatePage> {
         listener: (context, state) {
           state.whenOrNull(
             success: () => Navigator.of(context).pop(),
-            error: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.red,
-                  content: Text(
-                    message,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              );
-            },
+            error: (message) => context.showErrorSnackbar(message),
           );
         },
         child: Padding(

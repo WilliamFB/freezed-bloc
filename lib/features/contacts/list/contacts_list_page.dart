@@ -1,3 +1,4 @@
+import 'package:bloc_studies/core/ui/scaffold_messenger_extension.dart';
 import 'package:bloc_studies/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,17 +34,7 @@ class ContactsListPage extends StatelessWidget {
         },
         listener: (context, state) {
           state.whenOrNull(
-            error: (error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    error,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            },
+            error: (error) => context.showErrorSnackbar(error),
           );
         },
         child: RefreshIndicator(

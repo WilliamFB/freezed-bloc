@@ -1,3 +1,4 @@
+import 'package:bloc_studies/core/ui/scaffold_messenger_extension.dart';
 import 'package:bloc_studies/features/contacts/register/bloc/contacts_register_bloc.dart';
 import 'package:bloc_studies/widgets/loader.dart';
 import 'package:flutter/material.dart';
@@ -41,17 +42,7 @@ class _ContactsRegisterPageState extends State<ContactsRegisterPage> {
           // whenOrNull não tem orElse, então caso seja um estado diferente, nada acontece
           state.whenOrNull(
             success: () => Navigator.of(context).pop(),
-            error: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.red,
-                  content: Text(
-                    message,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              );
-            },
+            error: (message) => context.showErrorSnackbar(message),
           );
         },
         child: Padding(
