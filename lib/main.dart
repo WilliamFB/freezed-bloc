@@ -3,6 +3,8 @@ import 'package:bloc_studies/features/contacts/register/bloc/contacts_register_b
 import 'package:bloc_studies/features/contacts/register/contacts_register_page.dart';
 import 'package:bloc_studies/features/contacts_cubit/list/contacts_list_cubit_page.dart';
 import 'package:bloc_studies/features/contacts_cubit/list/cubit/contacts_list_cubit_cubit.dart';
+import 'package:bloc_studies/features/contacts_cubit/register/contacts_register_cubit_page.dart';
+import 'package:bloc_studies/features/contacts_cubit/register/cubit/contacts_register_cubit_cubit.dart';
 import 'package:bloc_studies/features/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,17 +32,21 @@ class MyApp extends StatelessWidget {
         ),
         home: const HomePage(),
         routes: {
-          'bloc/contacts/list': (context) => BlocProvider(
-                create: (context) => ContactsListBloc(
-                  repository: context.read<ContactsRepository>(),
-                )..add(const ContactsListEvent.findAll()),
-                child: const ContactsListPage(),
-              ),
-          'bloc/contacts/register': (context) => BlocProvider(
-                create: (context) =>
-                    ContactsRegisterBloc(repository: context.read()),
-                child: const ContactsRegisterPage(),
-              ),
+          'bloc/contacts/list': (context) {
+            return BlocProvider(
+              create: (context) => ContactsListBloc(
+                repository: context.read<ContactsRepository>(),
+              )..add(const ContactsListEvent.findAll()),
+              child: const ContactsListPage(),
+            );
+          },
+          'bloc/contacts/register': (context) {
+            return BlocProvider(
+              create: (context) =>
+                  ContactsRegisterBloc(repository: context.read()),
+              child: const ContactsRegisterPage(),
+            );
+          },
           'bloc/contacts/update': (context) {
             final contact =
                 ModalRoute.of(context)!.settings.arguments as ContactModel;
@@ -51,12 +57,21 @@ class MyApp extends StatelessWidget {
               child: ContactsUpdatePage(contact: contact),
             );
           },
-          'cubit/contacts/list': (context) => BlocProvider(
-                create: (context) => ContactsListCubitCubit(
-                  repository: context.read(),
-                )..findAll(),
-                child: const ContactsListCubitPage(),
-              ),
+          'cubit/contacts/list': (context) {
+            return BlocProvider(
+              create: (context) => ContactsListCubitCubit(
+                repository: context.read(),
+              )..findAll(),
+              child: const ContactsListCubitPage(),
+            );
+          },
+          'cubit/contacts/register': (context) {
+            return BlocProvider(
+              create: (context) =>
+                  ContactsRegisterCubitCubit(repository: context.read()),
+              child: const ContactsRegisterCubitPage(),
+            );
+          }
         },
       ),
     );

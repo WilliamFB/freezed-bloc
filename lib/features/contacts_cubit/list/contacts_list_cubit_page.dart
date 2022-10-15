@@ -15,6 +15,13 @@ class ContactsListCubitPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('List Cubit'),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () async {
+          await Navigator.of(context).pushNamed('cubit/contacts/register');
+          context.read<ContactsListCubitCubit>().findAll();
+        },
+      ),
       body: RefreshIndicator(
         onRefresh: () => context.read<ContactsListCubitCubit>().findAll(),
         child: CustomScrollView(

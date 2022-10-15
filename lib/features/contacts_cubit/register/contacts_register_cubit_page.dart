@@ -1,30 +1,21 @@
 import 'package:bloc_studies/core/ui/scaffold_messenger_extension.dart';
+import 'package:bloc_studies/features/contacts_cubit/register/cubit/contacts_register_cubit_cubit.dart';
+import 'package:bloc_studies/models/contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../models/contact_model.dart';
-import '../../../widgets/loader.dart';
-import 'bloc/contacts_update_bloc.dart';
-
-class ContactsUpdatePage extends StatefulWidget {
-  final ContactModel contact;
-  const ContactsUpdatePage({Key? key, required this.contact}) : super(key: key);
+class ContactsRegisterCubitPage extends StatefulWidget {
+  const ContactsRegisterCubitPage({Key? key}) : super(key: key);
 
   @override
-  State<ContactsUpdatePage> createState() => _ContactsUpdatePageState();
+  State<ContactsRegisterCubitPage> createState() =>
+      _ContactsRegisterCubitPageState();
 }
 
-class _ContactsUpdatePageState extends State<ContactsUpdatePage> {
+class _ContactsRegisterCubitPageState extends State<ContactsRegisterCubitPage> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _nameEC;
-  late final TextEditingController _emailEC;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameEC = TextEditingController(text: widget.contact.name);
-    _emailEC = TextEditingController(text: widget.contact.email);
-  }
+  final _nameEC = TextEditingController();
+  final _emailEC = TextEditingController();
 
   @override
   void dispose() {
@@ -37,9 +28,17 @@ class _ContactsUpdatePageState extends State<ContactsUpdatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update Bloc'),
+        title: const Text('Register Cubit'),
       ),
-      body: BlocListener<ContactsUpdateBloc, ContactsUpdateState>(
+      body:
+          BlocListener<ContactsRegisterCubitCubit, ContactsRegisterCubitState>(
+        listenWhen: (previous, current) {
+          return current.maybeWhen(
+            success: () => true,
+            error: (_) => true,
+            orElse: () => false,
+          );
+        },
         listener: (context, state) {
           state.whenOrNull(
             success: () => Navigator.of(context).pop(),
@@ -57,7 +56,7 @@ class _ContactsUpdatePageState extends State<ContactsUpdatePage> {
                   decoration: const InputDecoration(
                     label: Text('Nome'),
                   ),
-                  validator: (String? value) {
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'O campo nome é obrigatório';
                     }
@@ -69,7 +68,7 @@ class _ContactsUpdatePageState extends State<ContactsUpdatePage> {
                   decoration: const InputDecoration(
                     label: Text('E-mail'),
                   ),
-                  validator: (String? value) {
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'O campo e-mail é obrigatório';
                     }
@@ -78,27 +77,18 @@ class _ContactsUpdatePageState extends State<ContactsUpdatePage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    final validate = _formKey.currentState?.validate() ?? false;
-                    if (validate) {
+                    final validated =
+                        _formKey.currentState?.validate() ?? false;
+                    if (validated) {
+                      final contact = ContactModel(
+                          name: _nameEC.text, email: _emailEC.text);
                       context
-                          .read<ContactsUpdateBloc>()
-                          .add(ContactsUpdateEvent.save(
-                            id: widget.contact.id!,
-                            name: _nameEC.text,
-                            email: _emailEC.text,
-                          ));
+                          .read<ContactsRegisterCubitCubit>()
+                          .register(contact);
                     }
                   },
                   child: const Text('Salvar'),
                 ),
-                Loader<ContactsUpdateBloc, ContactsUpdateState>(
-                  selector: (state) {
-                    return state.maybeWhen(
-                      loading: () => true,
-                      orElse: () => false,
-                    );
-                  },
-                )
               ],
             ),
           ),

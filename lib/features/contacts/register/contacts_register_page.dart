@@ -27,7 +27,7 @@ class _ContactsRegisterPageState extends State<ContactsRegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register'),
+        title: const Text('Register Bloc'),
       ),
       body: BlocListener<ContactsRegisterBloc, ContactsRegisterState>(
         // Não executa o listener quando for success e error

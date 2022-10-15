@@ -23,7 +23,7 @@ class ContactsListPage extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Text('Contact List'),
+        title: const Text('Contact List Bloc'),
       ),
       body: BlocListener<ContactsListBloc, ContactsListState>(
         listenWhen: (previous, current) {
