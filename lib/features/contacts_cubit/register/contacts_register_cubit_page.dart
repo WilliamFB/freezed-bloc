@@ -4,6 +4,8 @@ import 'package:bloc_studies/models/contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../widgets/loader.dart';
+
 class ContactsRegisterCubitPage extends StatefulWidget {
   const ContactsRegisterCubitPage({Key? key}) : super(key: key);
 
@@ -88,6 +90,14 @@ class _ContactsRegisterCubitPageState extends State<ContactsRegisterCubitPage> {
                     }
                   },
                   child: const Text('Salvar'),
+                ),
+                Loader<ContactsRegisterCubitCubit, ContactsRegisterCubitState>(
+                  selector: (state) {
+                    return state.maybeWhen(
+                      loading: () => true,
+                      orElse: () => false,
+                    );
+                  },
                 ),
               ],
             ),

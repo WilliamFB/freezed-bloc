@@ -74,6 +74,17 @@ class ContactsListCubitPage extends StatelessWidget {
                                   ],
                                 ),
                                 child: ListTile(
+                                  onTap: () async {
+                                    await Navigator.pushNamed(
+                                      context,
+                                      'cubit/contacts/update',
+                                      arguments: contact,
+                                    );
+
+                                    context
+                                        .read<ContactsListCubitCubit>()
+                                        .findAll();
+                                  },
                                   title: Text(contact.name),
                                   subtitle: Text(contact.email),
                                 ),

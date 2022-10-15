@@ -5,6 +5,8 @@ import 'package:bloc_studies/features/contacts_cubit/list/contacts_list_cubit_pa
 import 'package:bloc_studies/features/contacts_cubit/list/cubit/contacts_list_cubit_cubit.dart';
 import 'package:bloc_studies/features/contacts_cubit/register/contacts_register_cubit_page.dart';
 import 'package:bloc_studies/features/contacts_cubit/register/cubit/contacts_register_cubit_cubit.dart';
+import 'package:bloc_studies/features/contacts_cubit/update/contacts_update_cubit_page.dart';
+import 'package:bloc_studies/features/contacts_cubit/update/cubit/contacts_update_cubit_cubit.dart';
 import 'package:bloc_studies/features/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +73,17 @@ class MyApp extends StatelessWidget {
                   ContactsRegisterCubitCubit(repository: context.read()),
               child: const ContactsRegisterCubitPage(),
             );
-          }
+          },
+          'cubit/contacts/update': (context) {
+            final contact =
+                ModalRoute.of(context)!.settings.arguments as ContactModel;
+
+            return BlocProvider(
+              create: (context) =>
+                  ContactsUpdateCubitCubit(repository: context.read()),
+              child: ContactsUpdateCubitPage(contact: contact),
+            );
+          },
         },
       ),
     );
