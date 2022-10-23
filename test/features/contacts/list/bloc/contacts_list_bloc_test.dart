@@ -8,12 +8,10 @@ import 'package:mocktail/mocktail.dart';
 class MockContactsRepository extends Mock implements ContactsRepository {}
 
 void main() {
-  // Declaração
   late ContactsRepository repository;
   late ContactsListBloc bloc;
   late List<ContactModel> contacts;
 
-  // Setup / Preparação
   setUp(
     () {
       repository = MockContactsRepository();
@@ -25,29 +23,58 @@ void main() {
     },
   );
 
-  // Execução
-  blocTest<ContactsListBloc, ContactsListState>(
-    'Deve buscar os contatos',
-    build: () => bloc,
-    act: (bloc) => bloc.add(const ContactsListEvent.findAll()),
-    setUp: () {
-      when(
-        () => repository.findAll(),
-      ).thenAnswer((_) async => contacts);
-    },
-    expect: () => [
-      ContactsListState.loading(),
-      ContactsListState.data(contacts: contacts),
-    ],
-  );
+  group('Repository sem erros', () {
+    setUp(
+      () {
+        when(
+          () => repository.findAll(),
+        ).thenAnswer((_) async => contacts);
+        when(
+          () => repository.delete(contacts[0]),
+        ).thenAnswer((_) async => {});
+      },
+    );
 
-  blocTest<ContactsListBloc, ContactsListState>(
-    'Deve retornar erro ao buscar contatos',
-    build: () => bloc,
-    act: (bloc) => bloc.add(const ContactsListEvent.findAll()),
-    expect: () => [
-      ContactsListState.loading(),
-      ContactsListState.error(error: 'Erro ao buscar contatos'),
-    ],
-  );
+    blocTest<ContactsListBloc, ContactsListState>(
+      'Deve buscar os contatos',
+      build: () => bloc,
+      act: (bloc) => bloc.add(const ContactsListEvent.findAll()),
+      expect: () => [
+        ContactsListState.loading(),
+        ContactsListState.data(contacts: contacts),
+      ],
+    );
+
+    blocTest<ContactsListBloc, ContactsListState>(
+      'Deve atualizar os contatos após o delete',
+      build: () => bloc,
+      act: (bloc) => bloc.add(ContactsListEvent.delete(model: contacts[0])),
+      expect: () => [
+        ContactsListState.loading(),
+        ContactsListState.data(contacts: contacts),
+      ],
+    );
+  });
+
+  group('Repository com erros', () {
+    blocTest<ContactsListBloc, ContactsListState>(
+      'Deve retornar erro ao buscar contatos',
+      build: () => bloc,
+      act: (bloc) => bloc.add(const ContactsListEvent.findAll()),
+      expect: () => [
+        ContactsListState.loading(),
+        ContactsListState.error(error: 'Erro ao buscar contatos'),
+      ],
+    );
+
+    blocTest<ContactsListBloc, ContactsListState>(
+      'Deve retornar erro ao deletar',
+      build: () => bloc,
+      act: (bloc) => bloc.add(ContactsListEvent.delete(model: contacts[0])),
+      expect: () => [
+        ContactsListState.loading(),
+        ContactsListState.error(error: 'Erro ao deletar contato'),
+      ],
+    );
+  });
 }
