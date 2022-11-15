@@ -24,7 +24,6 @@ class ContactsRegisterBloc
   FutureOr<void> _save(_Save event, Emitter<ContactsRegisterState> emit) async {
     try {
       emit(const ContactsRegisterState.loading());
-      await Future.delayed(const Duration(seconds: 1));
       final contactModel = ContactModel(name: event.nome, email: event.email);
       await _repository.create(contactModel);
       emit(const ContactsRegisterState.success());
