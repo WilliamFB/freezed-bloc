@@ -17,9 +17,10 @@ void main() {
       repository = MockContactsRepository();
       bloc = ContactsRegisterBloc(repository: repository);
       contact = ContactModel(name: 'name1', email: 'email1');
+      registerFallbackValue(contact);
       when(
         () => repository.create(any()),
-      ).thenAnswer((_) async => {});
+      ).thenAnswer((_) async => _);
     },
   );
 
